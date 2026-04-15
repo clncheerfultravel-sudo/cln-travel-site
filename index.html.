@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLN Travel | Smart Travel Rewards & AI Strategy</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+body { font-family: 'Inter', sans-serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const Icon = ({ name, size = 24, className = "" }) => {
+const [iconHtml, setIconHtml] = useState("");
+useEffect(() => {
+if (window.lucide) {
+const icon = window.lucide.icons[name];
+if (icon) setIconHtml(icon.toSvg({ size, class: className }));
+}
+}, [name, size, className]);
+return <span dangerouslySetInnerHTML={{ __html: iconHtml }} />;
+};
+
+    const App = () => {
+        const [isScrolled, setIsScrolled] = useState(false);
+        const [showAiModal, setShowAiModal] = useState(false);
+        const [aiPrompt, setAiPrompt] = useState('');
+        const [aiResponse, setAiResponse] = useState('');
+
+        useEffect(() => {
+            const handleScroll = () => setIsScrolled(window.scrollY > 50);
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+
+        const CLUB_LINK = "[https://travorium.com/enroll.php?sponsor=812209](https://travorium.com/enroll.php?sponsor=812209)";
+
+        const cards = [
+            { name: "Chase Sapphire", href: "[https://www.referyourchasecard.com/19v/VPE9DLPCZ2](https://www.referyourchasecard.com/19v/VPE9DLPCZ2)", tag: "Best for Beginners" },
+            { name: "Amex Platinum", href: "[https://americanexpress.com/en-us/referral/platinum-card?ref=CHARIN1d66&xl=cp15](https://americanexpress.com/en-us/referral/platinum-card?ref=CHARIN1d66&xl=cp15)", tag: "Luxury Travel" },
+            { name: "Southwest Rewards", href: "[https://www.referyourchasecard.com/226m/3O0FM8ERL9](https://www.referyourchasecard.com/226m/3O0FM8ERL9)", tag: "Domestic Favorite" },
+            { name: "Marriott Bonvoy", href: "[https://www.referyourchasecard.com/252u/58BZKWECA4](https://www.referyourchasecard.com/252u/58BZKWECA4)", tag: "Hotel Specialist" }
+        ];
+
+        return (
+            <div className="min-h-screen bg-white text-slate-900">
+                <div className="bg-slate-950 text-white text-[10px] py-2 text-center font-bold uppercase tracking-widest">
+                    Affiliate Disclosure: I may earn a commission if you use my links.
+                </div>
+                <nav className={`fixed w-full z-50 transition-all ${isScrolled ? 'bg-white/90 shadow-sm py-4' : 'bg-transparent py-6'}`}>
+                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <div className="flex items-center space-x-2">
+                            <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold italic">C</div>
+                            <span className="text-xl font-black uppercase tracking-tighter">CLN <span className="text-blue-600">Travel</span></span>
+                        </div>
+                        <a href={CLUB_LINK} target="_blank" className="bg-slate-900 text-white px-6 py-2 rounded-full font-bold text-xs uppercase">Join Club</a>
+                    </div>
+                </nav>
+                <section className="pt-48 pb-24 px-6 text-center">
+                    <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter uppercase leading-[0.85]">Travel For <span className="text-blue-600 italic">Free</span></h1>
+                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onClick={() => setShowAiModal(true)} className="bg-blue-600 text-white px-10 py-5 rounded-full font-black uppercase tracking-widest">Build My Strategy</button>
+                        <a href={CLUB_LINK} target="_blank" className="border-2 border-slate-200 px-10 py-5 rounded-full font-black uppercase tracking-widest">Elite Club</a>
+                    </div>
+                </section>
+                <section className="py-20 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {cards.map((card, i) => (
+                        <a key={i} href={card.href} target="_blank" className="bg-white p-10 rounded-[3rem] border-2 border-slate-50 hover:border-blue-600 transition-all shadow-sm">
+                            <h3 className="font-black uppercase tracking-tighter text-xl">{card.name}</h3>
+                            <p className="text-blue-600 text-xs font-bold uppercase mt-2">{card.tag}</p>
+                        </a>
+                    ))}
+                </section>
+                {showAiModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-md" onClick={() => setShowAiModal(false)}></div>
+                        <div className="bg-white w-full max-w-lg rounded-[3.5rem] relative z-10 p-10 shadow-2xl">
+                            <h2 className="text-4xl font-black uppercase mb-6">AI Strategy ✨</h2>
+                            <textarea value={aiPrompt} onChange={(e) => setAiPrompt(e.target.value)} placeholder="Where do you want to go?" className="w-full h-40 bg-slate-50 rounded-3xl p-6 mb-4 outline-none" />
+                            <button onClick={() => setAiResponse("Almost ready! Just connect your API key in Vercel to activate AI.")} className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black">Get Plan</button>
+                            {aiResponse && <p className="mt-4 text-sm font-medium text-blue-600">{aiResponse}</p>}
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    };
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+</script>
+</body>
+</html>
